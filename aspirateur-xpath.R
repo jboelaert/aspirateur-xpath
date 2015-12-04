@@ -20,7 +20,6 @@ aspirateur <- function(pages, xpath.finaux, xpath.interm= "/html", collapse= " |
   }))
 }
 
-
 ## Exemple d'utilisation : craigslist
 # library(RCurl)
 # library(XML)
@@ -31,3 +30,24 @@ aspirateur <- function(pages, xpath.finaux, xpath.interm= "/html", collapse= " |
 # xpath.interm <- "//span[@class='txt']"
 # xpath.finaux <- list(intitule= ".//a", date= ".//time", ville= ".//small")
 # craig <- aspirateur(pages, xpath.finaux, xpath.interm)
+
+
+## Aspirateur de luxe : télécharge les pages et extrait les informations
+## Ici on ne donne pas les pages parsées, mais seulement les adresses URL
+aspirateur.deluxe <- function(adresses, xpath.finaux, xpath.interm= "/html", collapse= " | ") {
+  library(RCurl)
+  library(XML)
+  if (!is.character(adresses)) stop("L'élément 'adresses' doit être un vecteur de texte.")
+  if (!is.list(xpath.finaux)) stop("L'élément 'xpath.finaux' doit être une liste.")
+  pages <- lapply(adresses, function(x) htmlParse(getURL(x)))
+  aspirateur(pages, xpath.finaux, xpath.interm, collapse)
+}
+
+
+# ## Exemple d'utilisation : craigslist
+# craig <- aspirateur.deluxe(adresses= paste0("http://sfbay.craigslist.org/search/zip?s=", 
+#                                             seq(100,500, by= 100)), 
+#                            xpath.interm= "//span[@class='txt']",
+#                            xpath.finaux= list(intitule= ".//a", 
+#                                               date= ".//time", 
+#                                               ville= ".//small"))
