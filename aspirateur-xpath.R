@@ -40,7 +40,16 @@ aspirateur.deluxe <- function(adresses, xpath.finaux, xpath.interm= "/html", col
   if (!is.character(adresses)) stop("L'élément 'adresses' doit être un vecteur de texte.")
   if (!is.list(xpath.finaux)) stop("L'élément 'xpath.finaux' doit être une liste.")
   pages <- lapply(adresses, function(x) htmlParse(getURL(x)))
-  aspirateur(pages, xpath.finaux, xpath.interm, collapse)
+  do.call(rbind, lapply(pages, function(la.page) {
+    noeuds <- xpathApply(la.page, xpath.interm) 
+    do.call(rbind, lapply(noeuds, function(le.noeud) {
+      brut <- lapply(xpath.finaux, function(le.xpath) 
+        xpathSApply(le.noeud, le.xpath, function(x) if ("XMLAttributeValue" %in% class(x)) { x } else xmlValue(x)))
+      as.data.frame(lapply(brut, function(vect) { 
+        if (!length(vect)) { NA } else if (length(vect) > 1) { paste(vect, collapse= collapse) } else vect
+      }))
+    }))
+  }))
 }
 
 
