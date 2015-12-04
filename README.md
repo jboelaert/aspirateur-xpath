@@ -5,5 +5,3 @@ Arguments :
 - xpath.interm (optionnel) : adresse XPath des noeuds intermédiaires
 - xpath.finaux : liste des adresses XPath des noeuds finaux
 - collapse (optionnel) : caractère intermédiaire pour la concaténation (quand deux résultats ou plus pour un seul xpath final)
-
-
