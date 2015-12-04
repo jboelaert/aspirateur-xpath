@@ -1,5 +1,6 @@
 # aspirateur-xpath
 Aspirateur de contenu de page web, éventuellement par noeuds intermédiaires. 
+
 Arguments :
 - pages : une liste de pages html (parsées avec htmlParse du package XML)
 - xpath.interm (optionnel) : adresse XPath des noeuds intermédiaires
@@ -8,6 +9,7 @@ Arguments :
 
 # aspirateur deluxe
 La même chose, mais sans avoir besoin de parser les pages au préalable.
+
 Arguments :
 - adresses : un vecteur d'adresses URL
 - xpath.interm (optionnel) : adresse XPath des noeuds intermédiaires
