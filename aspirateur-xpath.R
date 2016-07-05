@@ -1,4 +1,4 @@
-## 2/11/2015 - Aspirateur tout-terrain : xpath -> data.frame
+## 5/07/2016 - Aspirateur tout-terrain : xpath -> data.frame
 ## A partir d'une liste de pages parsées et d'une liste de xpath, va tout
 ## chercher et le met dans une data.frame (avec check de longueur à chaque fois
 ## pour NA ou concaténation). 
@@ -6,8 +6,12 @@
 ## intermédiaire par noeud intermédiaire.
 
 aspirateur <- function(pages, xpath.finaux, xpath.interm= "/html", collapse= " | ") {
-  if (!is.list(pages)) stop("L'élément 'pages' doit être une liste.")
-  if (!is.list(xpath.finaux)) stop("L'élément 'xpath.finaux' doit être une liste.")
+  if (inherits(pages, "XMLInternalDocument"))
+    pages <- list(pages)
+  if (!is.list(xpath.finaux)) 
+    xpath.finaux <- as.list(xpath.finaux)
+  if (is.null(names(xpath.finaux)))
+    names(xpath.finaux) <- paste0("var", 1:length(xpath.finaux))
   do.call(rbind, lapply(pages, function(la.page) {
     noeuds <- xpathApply(la.page, xpath.interm) 
     do.call(rbind, lapply(noeuds, function(le.noeud) {
@@ -38,7 +42,8 @@ aspirateur.deluxe <- function(adresses, xpath.finaux, xpath.interm= "/html", col
   library(RCurl)
   library(XML)
   if (!is.character(adresses)) stop("L'élément 'adresses' doit être un vecteur de texte.")
-  if (!is.list(xpath.finaux)) stop("L'élément 'xpath.finaux' doit être une liste.")
+  if (!is.list(xpath.finaux)) 
+    xpath.finaux <- as.list(xpath.finaux)
   pages <- lapply(adresses, function(x) htmlParse(getURL(x)))
   do.call(rbind, lapply(pages, function(la.page) {
     noeuds <- xpathApply(la.page, xpath.interm) 
